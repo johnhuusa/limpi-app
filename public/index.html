@@ -36,11 +36,11 @@
     .logo-text { font-size: 22px; font-weight: 700; }
     .logo-text span { color: var(--teal); }
     .nav-cta {
-      background: var(--teal); color: #fff; padding: 10px 18px;
+      background: #25D366; color: #fff; padding: 10px 18px;
       border-radius: 8px; font-weight: 700; font-size: 14px;
       transition: background .15s;
     }
-    .nav-cta:hover { background: #0d8577; }
+    .nav-cta:hover { background: #1eb85a; }
 
     /* Hero */
     .hero { padding: 60px 0 50px; border-bottom: 1px solid var(--border); }
@@ -66,6 +66,14 @@
       transition: transform .12s, background .15s;
     }
     .btn-primary:hover { background: #0d8577; transform: translateY(-1px); }
+    .btn-whatsapp {
+      background: #25D366; color: #fff; padding: 15px 28px;
+      border-radius: 10px; font-weight: 700; font-size: 16px;
+      display: inline-flex; align-items: center; gap: 10px;
+      transition: transform .12s, background .15s;
+    }
+    .btn-whatsapp:hover { background: #1eb85a; transform: translateY(-1px); }
+    .btn-whatsapp svg { flex-shrink: 0; }
     .btn-note { color: var(--muted); font-size: 14px; }
 
     /* Stat strip */
@@ -199,7 +207,7 @@
         <img src="/icon.png" alt="Yalimpi" class="logo-icon">
         <div class="logo-text">ya<span>limpi</span></div>
       </div>
-      <a href="/host.html" class="nav-cta">Book a Cleaning</a>
+      <a href="https://wa.me/573332774716?text=Hola%20Yalimpi%2C%20quiero%20reservar%20una%20limpieza%20%2F%20Hi%20Yalimpi%2C%20I'd%20like%20to%20book%20a%20cleaning" class="nav-cta" target="_blank">WhatsApp Us</a>
     </header>
   </div>
 
@@ -210,9 +218,13 @@
       <p class="lead">Professional turnover cleaning built around your booking calendar — so every guest walks into a spotless space, and you never scramble to find a cleaner again.</p>
       <p class="lead-es">Limpieza profesional entre huéspedes, lista a tiempo para cada check-in. Sin estrés, sin buscar limpiador a último minuto.</p>
       <div class="hero-actions">
-        <a href="/host.html" class="btn-primary">Request a Cleaning →</a>
-        <span class="btn-note">Takes 2 minutes · Pay per clean</span>
+        <a href="https://wa.me/573332774716?text=Hola%20Yalimpi%2C%20quiero%20reservar%20una%20limpieza%20%2F%20Hi%20Yalimpi%2C%20I'd%20like%20to%20book%20a%20cleaning" class="btn-whatsapp" target="_blank">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.15-1.7-.85-2-.95-.25-.1-.45-.15-.65.15-.2.3-.75.95-.9 1.1-.15.2-.35.2-.65.05-1.75-.85-2.9-1.55-4.05-3.55-.3-.55.3-.5.85-1.65.1-.2.05-.35 0-.5-.05-.15-.65-1.55-.85-2.15-.25-.55-.5-.5-.65-.5h-.55c-.2 0-.5.05-.75.35-.25.3-1 1-1 2.4s1 2.75 1.15 2.95c.15.2 2 3.05 4.85 4.25 1.8.75 2.5.8 3.4.7.55-.05 1.7-.7 1.95-1.35.25-.65.25-1.25.15-1.35-.05-.1-.25-.15-.55-.3M12 21.5c-1.65 0-3.25-.45-4.65-1.25l-.35-.2-3.45.9.9-3.35-.2-.35C3.4 15.4 3 13.75 3 12c0-4.95 4.05-9 9-9s9 4.05 9 9-4.05 9-9 9m0-20C6 1.5 1.5 6 1.5 12c0 1.9.5 3.75 1.45 5.4L1.5 22.5l5.25-1.4c1.6.85 3.4 1.35 5.25 1.35 6 0 10.5-4.5 10.5-10.5S18 1.5 12 1.5"/></svg>
+          Book on WhatsApp
+        </a>
+        <a href="/host.html" class="btn-primary">Or use the web form →</a>
       </div>
+      <span class="btn-note" style="display:block; margin-top:14px;">Fastest way to book · Chat with us directly · Pay per clean</span>
     </section>
 
     <div class="stat-strip">
@@ -337,8 +349,14 @@
 
     <div class="final">
       <h2>Ready for a spotless turnover?</h2>
-      <p>Book your first clean in about two minutes. / Reserva tu primera limpieza en dos minutos.</p>
-      <a href="/host.html" class="btn-primary">Request a Cleaning →</a>
+      <p>Message us on WhatsApp and book your first clean in minutes. / Escríbenos por WhatsApp y reserva en minutos.</p>
+      <div style="display:flex; gap:14px; justify-content:center; flex-wrap:wrap;">
+        <a href="https://wa.me/573332774716?text=Hola%20Yalimpi%2C%20quiero%20reservar%20una%20limpieza%20%2F%20Hi%20Yalimpi%2C%20I'd%20like%20to%20book%20a%20cleaning" class="btn-whatsapp" target="_blank">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.15-1.7-.85-2-.95-.25-.1-.45-.15-.65.15-.2.3-.75.95-.9 1.1-.15.2-.35.2-.65.05-1.75-.85-2.9-1.55-4.05-3.55-.3-.55.3-.5.85-1.65.1-.2.05-.35 0-.5-.05-.15-.65-1.55-.85-2.15-.25-.55-.5-.5-.65-.5h-.55c-.2 0-.5.05-.75.35-.25.3-1 1-1 2.4s1 2.75 1.15 2.95c.15.2 2 3.05 4.85 4.25 1.8.75 2.5.8 3.4.7.55-.05 1.7-.7 1.95-1.35.25-.65.25-1.25.15-1.35-.05-.1-.25-.15-.55-.3M12 21.5c-1.65 0-3.25-.45-4.65-1.25l-.35-.2-3.45.9.9-3.35-.2-.35C3.4 15.4 3 13.75 3 12c0-4.95 4.05-9 9-9s9 4.05 9 9-4.05 9-9 9m0-20C6 1.5 1.5 6 1.5 12c0 1.9.5 3.75 1.45 5.4L1.5 22.5l5.25-1.4c1.6.85 3.4 1.35 5.25 1.35 6 0 10.5-4.5 10.5-10.5S18 1.5 12 1.5"/></svg>
+          Book on WhatsApp
+        </a>
+        <a href="/host.html" class="btn-primary">Or use the web form →</a>
+      </div>
     </div>
   </div>
 

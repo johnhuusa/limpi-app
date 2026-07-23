@@ -97,7 +97,10 @@ app.post('/request', (req, res) => {
       propertyAddress,
       propertyType,
       hostName,
+      hostEmail,
       hostWhatsapp,
+      neighborhood,
+      buildingApt,
       checkoutTime,
       nextCheckinTime,
       specialInstructions,
@@ -105,18 +108,29 @@ app.post('/request', (req, res) => {
     } = req.body;
 
     const basePrice = db.rates[propertyType];
+    if (basePrice === undefined) {
+      return res.status(400).json({ error: 'Invalid property type' });
+    }
+
     const addOns = [];
     if (laundry) {
       addOns.push({ name: 'Laundry (wash & fold)', price: db.addOnPrices.laundry });
     }
     const totalPrice = basePrice + addOns.reduce((sum, a) => sum + a.price, 0);
 
+    const nextId = db.requests.length > 0
+      ? Math.max(...db.requests.map(r => r.id)) + 1
+      : 1;
+
     const newRequest = {
-      id: db.requests.length + 1,
+      id: nextId,
       propertyAddress,
       propertyType,
       hostName,
+      hostEmail,
       hostWhatsapp,
+      neighborhood,
+      buildingApt,
       checkoutTime,
       nextCheckinTime,
       specialInstructions,
@@ -154,7 +168,7 @@ app.get('/requests', (req, res) => {
 app.put('/requests/:id', (req, res) => {
   try {
     const db = JSON.parse(fs.readFileSync(REQUESTS_FILE, 'utf-8'));
-    const request = db.requests.find(r => r.id === parseInt(req.params.id));
+    const request = db.requests.find(r => r.id === parseInt(req.params.id, 10));
 
     if (!request) {
       return res.status(404).json({ error: 'Request not found' });
@@ -176,7 +190,7 @@ app.put('/requests/:id', (req, res) => {
 app.post('/requests/:id/photo', upload.single('photo'), (req, res) => {
   try {
     const db = JSON.parse(fs.readFileSync(REQUESTS_FILE, 'utf-8'));
-    const request = db.requests.find(r => r.id === parseInt(req.params.id));
+    const request = db.requests.find(r => r.id === parseInt(req.params.id, 10));
 
     if (!request) {
       return res.status(404).json({ error: 'Request not found' });
