@@ -22,8 +22,9 @@
       flex-wrap: wrap;
       gap: 16px;
     }
-    .logo-row { display: flex; align-items: center; gap: 10px; }
-    .logo-text { font-size: 18px; font-weight: 700; }
+    .logo-row { display: flex; align-items: center; gap: 12px; }
+    .logo-icon { width: 48px; height: 48px; border-radius: 10px; }
+    .logo-text { font-size: 20px; font-weight: 700; }
     .logo-text span { color: #0F9D8C; }
     h1 { font-size: 20px; margin: 0; font-weight: 700; }
 
@@ -121,17 +122,16 @@
       border-radius: 4px;
     }
     .empty { text-align: center; color: #777; padding: 60px 20px; }
+    .host-link { color: #3fd6c0; text-decoration: none; font-size: 14px; border: 1px solid #0F9D8C; padding: 8px 14px; border-radius: 6px; white-space: nowrap; }
+    .host-link:hover { background: #0F9D8C; color: #fff; }
   </style>
 </head>
 <body>
   <div class="header">
     <div class="logo-row">
-      <svg width="30" height="30" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="30" cy="30" r="30" fill="#0F9D8C"/>
-        <path d="M30 14 L33.5 25 L44.5 28.5 L33.5 32 L30 43 L26.5 32 L15.5 28.5 L26.5 25 Z" fill="white"/>
-        <circle cx="43" cy="15" r="3.2" fill="white" opacity="0.85"/>
-      </svg>
+      <img src="/icon.png" alt="Yalimpi" class="logo-icon">
       <div class="logo-text">ya<span>limpi</span> <span style="color:#777; font-weight:400;">admin</span></div>
+      <a href="/host.html" class="host-link" target="_blank">View host form ↗</a>
     </div>
     <div class="stats" id="stats"></div>
   </div>
@@ -140,10 +140,10 @@
 
   <script>
     function formatCOP(amount) {
-      return new Intl.NumberFormat('es-CO', {
-        style: 'currency', currency: 'COP',
+      const formatted = new Intl.NumberFormat('es-CO', {
         minimumFractionDigits: 0, maximumFractionDigits: 0,
       }).format(amount);
+      return 'COP$' + formatted;
     }
 
     function formatDateTime(dt) {

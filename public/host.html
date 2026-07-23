@@ -183,14 +183,13 @@
   </div>
 
   <script>
-    function formatCOP(amount) {
-      return new Intl.NumberFormat('es-CO', {
-        style: 'currency',
-        currency: 'COP',
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 0,
-      }).format(amount);
-    }
+function formatCOP(amount) {
+  const formatted = new Intl.NumberFormat('es-CO', {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(amount);
+  return 'COP$' + formatted;
+}
 
     document.getElementById('requestForm').addEventListener('submit', async (e) => {
       e.preventDefault();
