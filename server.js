@@ -1,53 +1,14 @@
 require('dotenv').config();
 const express = require('express');
 const fs = require('fs');
-
 const multer = require('multer');
-const path = require('path');
 
-const storage = multer.diskStorage({
-  destination: 'uploads/',
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-    cb(null, uniqueSuffix + path.extname(file.originalname));
-  },
-});
-
-const upload = multer({ storage });
+const upload = multer({ dest: 'uploads/' });
 
 const app = express();
 app.use(express.json());
 app.use(express.static('public'));
 app.use('/uploads', express.static('uploads'));
-
-// insert code after request/setup
-
-function requireAdminAuth(req, res, next) {
-  const authHeader = req.headers.authorization;
-
-  if (!authHeader || !authHeader.startsWith('Basic ')) {
-    res.set('WWW-Authenticate', 'Basic realm="Admin"');
-    return res.status(401).send('Authentication required');
-  }
-
-  const base64Credentials = authHeader.split(' ')[1];
-  const credentials = Buffer.from(base64Credentials, 'base64').toString('utf-8');
-  const [username, password] = credentials.split(':');
-
-  if (password === process.env.ADMIN_PASSWORD) {
-    return next();
-  }
-
-  res.set('WWW-Authenticate', 'Basic realm="Admin"');
-  return res.status(401).send('Invalid credentials');
-}
-
-app.use('/admin.html', requireAdminAuth);
-app.use('/requests', requireAdminAuth);
-
-// before first app.post
-
-
 
 // Create a new cleaning request
 app.post('/request', (req, res) => {
@@ -153,5 +114,4 @@ app.post('/requests/:id/photo', upload.single('photo'), (req, res) => {
   }
 });
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(3000, () => console.log('Server running at http://localhost:3000'));
