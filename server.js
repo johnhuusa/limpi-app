@@ -20,6 +20,35 @@ app.use(express.json());
 app.use(express.static('public'));
 app.use('/uploads', express.static('uploads'));
 
+// insert code after request/setup
+
+function requireAdminAuth(req, res, next) {
+  const authHeader = req.headers.authorization;
+
+  if (!authHeader || !authHeader.startsWith('Basic ')) {
+    res.set('WWW-Authenticate', 'Basic realm="Admin"');
+    return res.status(401).send('Authentication required');
+  }
+
+  const base64Credentials = authHeader.split(' ')[1];
+  const credentials = Buffer.from(base64Credentials, 'base64').toString('utf-8');
+  const [username, password] = credentials.split(':');
+
+  if (password === process.env.ADMIN_PASSWORD) {
+    return next();
+  }
+
+  res.set('WWW-Authenticate', 'Basic realm="Admin"');
+  return res.status(401).send('Invalid credentials');
+}
+
+app.use('/admin.html', requireAdminAuth);
+app.use('/requests', requireAdminAuth);
+
+// before first app.post
+
+
+
 // Create a new cleaning request
 app.post('/request', (req, res) => {
   try {
