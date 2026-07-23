@@ -191,6 +191,24 @@ function formatCOP(amount) {
   return 'COP$' + formatted;
 }
 
+function toLocalDatetimeInputValue(date) {
+  const pad = (n) => String(n).padStart(2, '0');
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+}
+
+(function prefillTimes() {
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+
+  const checkout = new Date(tomorrow);
+  checkout.setHours(11, 0, 0, 0);
+  document.getElementById('checkoutTime').value = toLocalDatetimeInputValue(checkout);
+
+  const nextCheckin = new Date(tomorrow);
+  nextCheckin.setHours(15, 0, 0, 0);
+  document.getElementById('nextCheckinTime').value = toLocalDatetimeInputValue(nextCheckin);
+})();
+
     document.getElementById('requestForm').addEventListener('submit', async (e) => {
       e.preventDefault();
 
