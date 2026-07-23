@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Request a Cleaning</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 500px; margin: 40px auto; padding: 0 20px; }
+    label { display: block; margin-top: 15px; font-weight: bold; }
+    input, select, textarea { width: 100%; padding: 8px; margin-top: 5px; box-sizing: border-box; }
+    button { margin-top: 20px; padding: 10px 20px; background: #25D366; color: white; border: none; border-radius: 5px; cursor: pointer; }
+    #result { margin-top: 20px; padding: 15px; background: #f0f0f0; border-radius: 5px; display: none; }
+  </style>
+</head>
+<body>
+  <h1>Request a Cleaning</h1>
+  <form id="requestForm">
+    <label>Property Address</label>
+    <input type="text" id="propertyAddress" required>
+
+    <label>Property Type</label>
+    <select id="propertyType" required>
+      <option value="studio">Studio</option>
+      <option value="1br">1 Bedroom</option>
+      <option value="2br">2 Bedroom</option>
+      <option value="3br">3 Bedroom</option>
+    </select>
+
+    <label>Your Name</label>
+    <input type="text" id="hostName" required>
+
+    <label>WhatsApp Number (with country code, digits only, e.g. 573001234567)</label>
+    <input type="text" id="hostWhatsapp" required>
+
+    <label>Checkout Time</label>
+    <input type="datetime-local" id="checkoutTime" required>
+
+    <label>Next Check-in Time (if known)</label>
+    <input type="datetime-local" id="nextCheckinTime">
+
+    <label>
+      <input type="checkbox" id="laundry" style="width: auto; display: inline;">
+      Add laundry (wash & fold) — +$15,000
+    </label>
+
+    <label>Special Instructions</label>
+    <textarea id="specialInstructions" rows="3"></textarea>
+
+    <button type="submit">Submit Request</button>
+  </form>
+
+  <div id="result"></div>
+
+  <script>
+    document.getElementById('requestForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const data = {
+        propertyAddress: document.getElementById('propertyAddress').value,
+        propertyType: document.getElementById('propertyType').value,
+        hostName: document.getElementById('hostName').value,
+        hostWhatsapp: document.getElementById('hostWhatsapp').value,
+        checkoutTime: document.getElementById('checkoutTime').value,
+        nextCheckinTime: document.getElementById('nextCheckinTime').value,
+        specialInstructions: document.getElementById('specialInstructions').value,
+        laundry: document.getElementById('laundry').checked,
+      };
+
+      const response = await fetch('/request', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+
+      const result = await response.json();
+      const resultDiv = document.getElementById('result');
+      resultDiv.style.display = 'block';
+      resultDiv.innerHTML = `<strong>Request submitted!</strong><br>Total price: $${result.totalPrice}<br>We'll be in touch on WhatsApp.`;
+      document.getElementById('requestForm').reset();
+    });
+  </script>
+</body>
+</html>
