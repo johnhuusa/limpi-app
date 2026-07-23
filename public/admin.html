@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin - Limpi</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 1000px; margin: 40px auto; padding: 0 20px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { border: 1px solid #ddd; padding: 10px; text-align: left; font-size: 14px; vertical-align: top; }
+    th { background: #f4f4f4; }
+    select, input[type="text"] { padding: 5px; width: 100%; box-sizing: border-box; }
+    .status-requested { color: #b00; font-weight: bold; }
+    .status-assigned { color: #b80; font-weight: bold; }
+    .status-completed { color: #080; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h1>Cleaning Requests — Admin</h1>
+  <table id="requestsTable">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Property</th>
+        <th>Host</th>
+        <th>Checkout</th>
+        <th>Total</th>
+        <th>Cleaner</th>
+        <th>Status</th>
+        <th>Photo</th>
+      </tr>
+    </thead>
+    <tbody id="requestsBody"></tbody>
+  </table>
+
+  <script>
+    async function loadRequests() {
+      const response = await fetch('/requests');
+      const requests = await response.json();
+      const tbody = document.getElementById('requestsBody');
+      tbody.innerHTML = '';
+
+      requests.forEach(r => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${r.id}</td>
+          <td>${r.propertyAddress}<br><small>${r.propertyType}</small></td>
+          <td>${r.hostName}<br><small>${r.hostWhatsapp}</small></td>
+          <td>${r.checkoutTime.replace('T', ' ')}</td>
+          <td>$${r.totalPrice.toLocaleString()}</td>
+          <td><input type="text" value="${r.assignedCleaner || ''}" data-id="${r.id}" class="cleanerInput" placeholder="Assign..."></td>
+          <td>
+            <select data-id="${r.id}" class="statusSelect">
+              <option value="requested" ${r.status === 'requested' ? 'selected' : ''}>Requested</option>
+              <option value="assigned" ${r.status === 'assigned' ? 'selected' : ''}>Assigned</option>
+              <option value="completed" ${r.status === 'completed' ? 'selected' : ''}>Completed</option>
+            </select>
+          </td>
+          <td>
+            <input type="file" accept="image/*" data-id="${r.id}" class="photoInput">
+            ${r.photoUrl ? `<br><a href="${r.photoUrl}" target="_blank">View photo</a>` : ''}
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+
+      document.querySelectorAll('.statusSelect').forEach(el => {
+        el.addEventListener('change', (e) => updateRequest(e.target.dataset.id, { status: e.target.value }));
+      });
+      document.querySelectorAll('.cleanerInput').forEach(el => {
+        el.addEventListener('change', (e) => updateRequest(e.target.dataset.id, { assignedCleaner: e.target.value }));
+      });
+      document.querySelectorAll('.photoInput').forEach(el => {
+        el.addEventListener('change', (e) => uploadPhoto(e.target.dataset.id, e.target.files[0]));
+      });
+    }
+
+    async function updateRequest(id, updates) {
+      await fetch(`/requests/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updates),
+      });
+      loadRequests();
+    }
+
+    async function uploadPhoto(id, file) {
+      if (!file) return;
+      const formData = new FormData();
+      formData.append('photo', file);
+      await fetch(`/requests/${id}/photo`, { method: 'POST', body: formData });
+      loadRequests();
+    }
+
+    loadRequests();
+  </script>
+</body>
+</html>

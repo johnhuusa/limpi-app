@@ -26,9 +26,9 @@
         }
       ],
       "totalPrice": 105000,
-      "assignedCleaner": null,
-      "status": "requested",
-      "photoUrl": null,
+      "assignedCleaner": "Maria Fernanda Jose",
+      "status": "assigned",
+      "photoUrl": "/uploads/1784776828875-483087784.JPG",
       "createdAt": "2026-07-23T02:50:59.298Z"
     }
   ]
