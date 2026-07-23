@@ -1,55 +1,197 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Request a Cleaning</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Book Your Cleaning — Yalimpi</title>
   <style>
-    body { font-family: Arial, sans-serif; max-width: 500px; margin: 40px auto; padding: 0 20px; }
-    label { display: block; margin-top: 15px; font-weight: bold; }
-    input, select, textarea { width: 100%; padding: 8px; margin-top: 5px; box-sizing: border-box; }
-    button { margin-top: 20px; padding: 10px 20px; background: #25D366; color: white; border: none; border-radius: 5px; cursor: pointer; }
-    #result { margin-top: 20px; padding: 15px; background: #f0f0f0; border-radius: 5px; display: none; }
+    * { box-sizing: border-box; }
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #121212;
+      color: #f2f2f2;
+      margin: 0;
+      padding: 40px 16px;
+    }
+    .card {
+      max-width: 700px;
+      margin: 0 auto;
+      background: #1c1c1c;
+      border: 1px solid #2c2c2c;
+      border-top: 4px solid #0F9D8C;
+      border-radius: 12px;
+      padding: 36px 40px 44px;
+    }
+    .logo-row { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
+    .logo-row svg { display: block; }
+    .logo-icon { width: 80px; height: 80px; border-radius: 16.75px; }
+    .logo-wordmark { display: flex; flex-direction: column; line-height: 1.15; }
+    .logo-text { font-size: 30px; font-weight: 700; }
+    .logo-text span { color: #0F9D8C; }
+    .logo-tagline { font-size: 16px; color: #0F9D8C; font-weight: 600; letter-spacing: 0.5px; }
+
+    h1 { font-size: 26px; margin: 0 0 4px; }
+    .subtitle-es { color: #999; font-size: 15px; margin-bottom: 6px; }
+    .intro { color: #aaa; font-size: 14px; margin-bottom: 28px; border-bottom: 1px solid #2c2c2c; padding-bottom: 20px; }
+
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 20px; }
+    .full { grid-column: 1 / -1; }
+
+    label { display: block; margin-top: 18px; font-weight: bold; font-size: 14px; }
+    label .es { font-weight: normal; color: #888; font-size: 12.5px; }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 11px 12px;
+      margin-top: 6px;
+      background: #141414;
+      border: 1px solid #333;
+      border-radius: 6px;
+      color: #f2f2f2;
+      font-size: 14px;
+    }
+    input::placeholder, textarea::placeholder { color: #666; }
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: #0F9D8C;
+    }
+    /* Make the native date/time calendar & clock icons visible on dark inputs */
+    input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+      filter: invert(1);
+      cursor: pointer;
+      opacity: 0.7;
+    }
+    input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover {
+      opacity: 1;
+    }
+
+    .checkbox-row { display: flex; align-items: center; gap: 10px; margin-top: 20px; }
+    .checkbox-row input { width: auto; margin: 0; }
+    .checkbox-row label { margin: 0; font-weight: normal; font-size: 14px; }
+
+    button {
+      margin-top: 28px;
+      padding: 15px 20px;
+      background: #0F9D8C;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: bold;
+      width: 100%;
+      transition: background 0.15s;
+    }
+    button:hover { background: #0d8577; }
+
+    #result {
+      margin-top: 22px;
+      padding: 16px;
+      background: #133b35;
+      border: 1px solid #0F9D8C;
+      border-radius: 8px;
+      display: none;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    #result.error { background: #3b1313; border-color: #9d0f0f; }
+    .price-line { font-size: 22px; font-weight: bold; color: #3fd6c0; }
+
+    @media (max-width: 560px) {
+      .grid { grid-template-columns: 1fr; }
+      .card { padding: 28px 20px 32px; }
+      .logo-icon { width: 52px; height: 52px; }
+      .logo-text { font-size: 24px; }
+      .logo-tagline { font-size: 13px; }
+      h1 { font-size: 22px; }
+    }
   </style>
 </head>
 <body>
-  <h1>Request a Cleaning</h1>
-  <form id="requestForm">
-    <label>Property Address</label>
-    <input type="text" id="propertyAddress" required>
+  <div class="card">
+    <div class="logo-row">
+      <img src="/icon.png" alt="Yalimpi" class="logo-icon">
+      <div class="logo-wordmark">
+        <div class="logo-text">ya<span>limpi</span></div>
+        <div class="logo-tagline">Clean Casa</div>
+      </div>
+    </div>
 
-    <label>Property Type</label>
-    <select id="propertyType" required>
-      <option value="studio">Studio</option>
-      <option value="1br">1 Bedroom</option>
-      <option value="2br">2 Bedroom</option>
-      <option value="3br">3 Bedroom</option>
-    </select>
+    <h1>Book Your Cleaning</h1>
+    <div class="subtitle-es">(Reserve su Limpieza)</div>
+    <div class="intro">Complete the form below to schedule your cleaning in Medellín. / Complete el formulario para agendar su limpieza en Medellín.</div>
 
-    <label>Your Name</label>
-    <input type="text" id="hostName" required>
+    <form id="requestForm">
+      <div class="grid">
+        <div class="full">
+          <label>Full Name <span class="es">(Nombre Completo)</span></label>
+          <input type="text" id="hostName" placeholder="John Doe" required>
+        </div>
 
-    <label>WhatsApp Number (with country code, digits only, e.g. 573001234567)</label>
-    <input type="text" id="hostWhatsapp" required>
+        <div>
+          <label>Email <span class="es">(Correo Electrónico)</span></label>
+          <input type="email" id="hostEmail" placeholder="john@example.com" required>
+        </div>
+        <div>
+          <label>WhatsApp Number <span class="es">(Número)</span></label>
+          <input type="text" id="hostWhatsapp" placeholder="573001234567" required>
+        </div>
 
-    <label>Checkout Time</label>
-    <input type="datetime-local" id="checkoutTime" required>
+        <div>
+          <label>Property Type <span class="es">(Tipo de Propiedad)</span></label>
+          <select id="propertyType" required>
+            <option value="studio">Studio</option>
+            <option value="1br">1 Bedroom</option>
+            <option value="2br">2 Bedrooms</option>
+            <option value="3br">3 Bedrooms</option>
+          </select>
+        </div>
+        <div>
+          <label>Neighborhood <span class="es">(Barrio)</span></label>
+          <input type="text" id="neighborhood" placeholder="El Poblado" required>
+        </div>
 
-    <label>Next Check-in Time (if known)</label>
-    <input type="datetime-local" id="nextCheckinTime">
+        <div class="full">
+          <label>Address, Building &amp; Apt <span class="es">(Dirección, Edificio y Apto)</span></label>
+          <input type="text" id="propertyAddress" placeholder="Calle 10 #43-12, Edificio Alto, Apt 902" required>
+        </div>
 
-    <label>
-      <input type="checkbox" id="laundry" style="width: auto; display: inline;">
-      Add laundry (wash & fold) — +$15,000
-    </label>
+        <div>
+          <label>Checkout Time <span class="es">(Hora de Salida)</span></label>
+          <input type="datetime-local" id="checkoutTime" required>
+        </div>
+        <div>
+          <label>Next Check-in <span class="es">(Próximo Check-in)</span></label>
+          <input type="datetime-local" id="nextCheckinTime">
+        </div>
 
-    <label>Special Instructions</label>
-    <textarea id="specialInstructions" rows="3"></textarea>
+        <div class="full checkbox-row">
+          <input type="checkbox" id="laundry">
+          <label for="laundry">Add laundry, wash &amp; fold — +$15.000 COP <span class="es">(Agregar lavandería)</span></label>
+        </div>
 
-    <button type="submit">Submit Request</button>
-  </form>
+        <div class="full">
+          <label>Access Notes <span class="es">(Notas de Acceso / Instrucciones)</span></label>
+          <textarea id="specialInstructions" rows="3" placeholder="Example: Leave key at front desk / La clave es 1234..."></textarea>
+        </div>
+      </div>
 
-  <div id="result"></div>
+      <button type="submit">Confirm Booking (Confirmar Reserva)</button>
+    </form>
+
+    <div id="result"></div>
+  </div>
 
   <script>
+    function formatCOP(amount) {
+      return new Intl.NumberFormat('es-CO', {
+        style: 'currency',
+        currency: 'COP',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+      }).format(amount);
+    }
+
     document.getElementById('requestForm').addEventListener('submit', async (e) => {
       e.preventDefault();
 
@@ -57,7 +199,9 @@
         propertyAddress: document.getElementById('propertyAddress').value,
         propertyType: document.getElementById('propertyType').value,
         hostName: document.getElementById('hostName').value,
+        hostEmail: document.getElementById('hostEmail').value,
         hostWhatsapp: document.getElementById('hostWhatsapp').value,
+        neighborhood: document.getElementById('neighborhood').value,
         checkoutTime: document.getElementById('checkoutTime').value,
         nextCheckinTime: document.getElementById('nextCheckinTime').value,
         specialInstructions: document.getElementById('specialInstructions').value,
@@ -73,7 +217,19 @@
       const result = await response.json();
       const resultDiv = document.getElementById('result');
       resultDiv.style.display = 'block';
-      resultDiv.innerHTML = `<strong>Request submitted!</strong><br>Total price: $${result.totalPrice}<br>We'll be in touch on WhatsApp.`;
+
+      if (!response.ok) {
+        resultDiv.classList.add('error');
+        resultDiv.innerHTML = `<strong>Error:</strong> ${result.error || 'Something went wrong / Algo salió mal'}`;
+        return;
+      }
+
+      resultDiv.classList.remove('error');
+      resultDiv.innerHTML = `
+        <strong>Request submitted! (¡Solicitud enviada!)</strong><br>
+        Total: <span class="price-line">${formatCOP(result.totalPrice)}</span><br>
+        We'll be in touch on WhatsApp. / Te contactaremos por WhatsApp.
+      `;
       document.getElementById('requestForm').reset();
     });
   </script>
