@@ -110,6 +110,7 @@
       border-radius: 6px;
       border: 1px solid #333;
     }
+    .photo-thumbs { display: flex; gap: 6px; flex-wrap: wrap; }
     input[type="file"] { font-size: 12px; max-width: 200px; }
 
     .special {
@@ -215,10 +216,14 @@
               </select>
             </div>
             <div class="control-group">
-              <label>Completion Photo</label>
+              <label>Completion Photos</label>
               <div class="photo-cell">
-                <input type="file" accept="image/*" data-id="${r.id}" class="photoInput">
-                ${r.photoUrl ? `<img src="${esc(r.photoUrl)}" class="photo-thumb"><a href="${esc(r.photoUrl)}" target="_blank">View ↗</a>` : ''}
+                <input type="file" accept="image/*" multiple data-id="${r.id}" class="photoInput">
+                <div class="photo-thumbs">
+                  ${(r.photoUrls || []).map(url => `
+                    <a href="${esc(url)}" target="_blank"><img src="${esc(url)}" class="photo-thumb"></a>
+                  `).join('')}
+                </div>
               </div>
             </div>
           </div>
@@ -233,7 +238,7 @@
         el.addEventListener('change', (e) => updateRequest(e.target.dataset.id, { assignedCleaner: e.target.value }));
       });
       document.querySelectorAll('.photoInput').forEach(el => {
-        el.addEventListener('change', (e) => uploadPhoto(e.target.dataset.id, e.target.files[0]));
+        el.addEventListener('change', (e) => uploadPhoto(e.target.dataset.id, e.target.files));
       });
     }
 
@@ -246,11 +251,14 @@
       loadRequests();
     }
 
-    async function uploadPhoto(id, file) {
-      if (!file) return;
+    async function uploadPhoto(id, files) {
+      if (!files || files.length === 0) return;
       const formData = new FormData();
-      formData.append('photo', file);
-      await fetch(`/requests/${id}/photo`, { method: 'POST', body: formData });
+      Array.from(files).forEach(f => formData.append('photos', f));
+      const res = await fetch(`/requests/${id}/photo`, { method: 'POST', body: formData });
+      const result = await res.json();
+      if (result.error) alert(result.error);
+      else if (result.warning) alert(result.warning);
       loadRequests();
     }
 

@@ -53,6 +53,12 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
+function getPhotoUrls(request) {
+  if (Array.isArray(request.photoUrls)) return request.photoUrls;
+  if (request.photoUrl) return [request.photoUrl];
+  return [];
+}
+
 const app = express();
 app.use(express.json());
 
@@ -139,7 +145,7 @@ app.post('/request', (req, res) => {
       totalPrice,
       assignedCleaner: null,
       status: 'requested',
-      photoUrl: null,
+      photoUrls: [],
       createdAt: new Date().toISOString(),
     };
 
@@ -157,7 +163,8 @@ app.post('/request', (req, res) => {
 app.get('/requests', (req, res) => {
   try {
     const db = JSON.parse(fs.readFileSync(REQUESTS_FILE, 'utf-8'));
-    res.json(db.requests);
+    const requests = db.requests.map(r => ({ ...r, photoUrls: getPhotoUrls(r) }));
+    res.json(requests);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Something went wrong' });
@@ -186,8 +193,15 @@ app.put('/requests/:id', (req, res) => {
   }
 });
 
-// Upload a completion photo for a request
-app.post('/requests/:id/photo', upload.single('photo'), (req, res) => {
+// Upload completion photos for a request
+app.post('/requests/:id/photo', (req, res, next) => {
+  upload.array('photos', 6)(req, res, (err) => {
+    if (err) {
+      return res.status(400).json({ error: 'You can upload at most 6 photos at a time.' });
+    }
+    next();
+  });
+}, (req, res) => {
   try {
     const db = JSON.parse(fs.readFileSync(REQUESTS_FILE, 'utf-8'));
     const request = db.requests.find(r => r.id === parseInt(req.params.id, 10));
@@ -196,10 +210,26 @@ app.post('/requests/:id/photo', upload.single('photo'), (req, res) => {
       return res.status(404).json({ error: 'Request not found' });
     }
 
-    request.photoUrl = '/uploads/' + req.file.filename;
+    const existing = getPhotoUrls(request);
+    const files = req.files || [];
+    const remainingSlots = 6 - existing.length;
+
+    if (remainingSlots <= 0) {
+      return res.status(400).json({ error: 'This request already has the maximum of 6 photos.' });
+    }
+
+    const accepted = files.slice(0, remainingSlots);
+    const newUrls = accepted.map(f => '/uploads/' + f.filename);
+
+    request.photoUrls = existing.concat(newUrls);
+    delete request.photoUrl;
     fs.writeFileSync(REQUESTS_FILE, JSON.stringify(db, null, 2));
 
-    res.json({ photoUrl: request.photoUrl });
+    const result = { photoUrls: request.photoUrls };
+    if (accepted.length < files.length) {
+      result.warning = `Only ${accepted.length} of ${files.length} photos were added — a request can have at most 6 photos total.`;
+    }
+    res.json(result);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Something went wrong' });
