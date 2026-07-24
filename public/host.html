@@ -129,12 +129,12 @@
         </div>
 
         <div>
-          <label>Email <span class="es">(Correo Electrónico)</span></label>
-          <input type="email" id="hostEmail" placeholder="john@example.com" required>
-        </div>
-        <div>
           <label>WhatsApp Number <span class="es">(Número)</span></label>
           <input type="text" id="hostWhatsapp" placeholder="573001234567" required>
+        </div>
+        <div>
+          <label>Email (optional) <span class="es">(Correo Electrónico)</span></label>
+          <input type="email" id="hostEmail" placeholder="john@example.com">
         </div>
 
         <div>
@@ -148,7 +148,15 @@
         </div>
         <div>
           <label>Neighborhood <span class="es">(Barrio)</span></label>
-          <input type="text" id="neighborhood" placeholder="El Poblado" required>
+          <select id="neighborhood" required>
+            <option value="El Poblado">El Poblado</option>
+            <option value="Laureles">Laureles</option>
+            <option value="Envigado">Envigado</option>
+            <option value="Sabaneta">Sabaneta</option>
+            <option value="Belén">Belén</option>
+            <option value="Other">Other</option>
+          </select>
+          <input type="text" id="neighborhoodOther" placeholder="Enter neighborhood" style="display: none; margin-top: 8px;">
         </div>
 
         <div class="full">
@@ -209,6 +217,12 @@ function toLocalDatetimeInputValue(date) {
   document.getElementById('nextCheckinTime').value = toLocalDatetimeInputValue(nextCheckin);
 })();
 
+    const neighborhoodSelect = document.getElementById('neighborhood');
+    const neighborhoodOther = document.getElementById('neighborhoodOther');
+    neighborhoodSelect.addEventListener('change', () => {
+      neighborhoodOther.style.display = neighborhoodSelect.value === 'Other' ? 'block' : 'none';
+    });
+
     document.getElementById('requestForm').addEventListener('submit', async (e) => {
       e.preventDefault();
 
@@ -218,7 +232,7 @@ function toLocalDatetimeInputValue(date) {
         hostName: document.getElementById('hostName').value,
         hostEmail: document.getElementById('hostEmail').value,
         hostWhatsapp: document.getElementById('hostWhatsapp').value,
-        neighborhood: document.getElementById('neighborhood').value,
+        neighborhood: neighborhoodSelect.value === 'Other' ? neighborhoodOther.value : neighborhoodSelect.value,
         checkoutTime: document.getElementById('checkoutTime').value,
         nextCheckinTime: document.getElementById('nextCheckinTime').value,
         specialInstructions: document.getElementById('specialInstructions').value,
