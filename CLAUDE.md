@@ -34,3 +34,10 @@ There is no build step, bundler, test suite, or linter — this is a plain Node/
 **Pricing is computed server-side** in `POST /request` from `db.rates[propertyType]` plus `db.addOnPrices` (currently just `laundry`), not trusted from the client.
 
 **Dark theme is hand-rolled CSS repeated per-file** (`admin.html`, `host.html`) — there's no shared stylesheet or design tokens file, so matching an existing look means copying the relevant class patterns (e.g. `#121212` background, `#0F9D8C` accent, `#3fd6c0` teal) from the nearest existing page rather than introducing new colors.
+
+## Preferences
+
+- Prices display as `COP$` with Colombian thousands-separators (e.g. `COP$55.000`), via `Intl.NumberFormat('es-CO', ...)` — see `formatCOP()` in `admin.html`/`host.html`.
+- UI text is bilingual: English primary, Spanish secondary (e.g. `Checkout Time <span class="es">(Hora de Salida)</span>`).
+- Dark theme, teal `#0F9D8C` accent.
+- Commit messages: short, single-line, no co-author footers.
